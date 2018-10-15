@@ -29,3 +29,9 @@ def update_index():
     return json.dumps(end-begin)
 
 
+@app.route('/song/search', method='GET')
+@app.hook('after_request')
+def get_song_list():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    word = request.forms.get('word')
+    return json.dumps(song_list.search_lyric('的'))

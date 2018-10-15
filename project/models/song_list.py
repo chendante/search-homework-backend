@@ -48,6 +48,29 @@ class song_list:
 
     @staticmethod
     def song_name_list():
-        Database.cursor.execute("SELECT song_id,song_name from song_list")
+        Database.cursor.execute("SELECT song_id,song_name,id from song_list")
+        data = Database.cursor.fetchall()
+        return data
+
+    @staticmethod
+    def lyric_inverted_index_list():
+        Database.cursor.execute("SELECT * from lyric_inverted_index")
+        data = Database.cursor.fetchall()
+        return data
+
+    #给一个词，返回对应的id列表
+    @staticmethod
+    def search_lyric(search_word):
+        sql = "SELECT * FROM lyric_inverted_index WHERE lyric_inverted_index.word='%s'" % search_word
+        Database.cursor.execute(sql)
+        # 获取所有记录列表
+        data = Database.cursor.fetchall()
+        return data
+
+    @staticmethod
+    def search_name(search_word):
+        sql = "SELECT * FROM name_inverted_index WHERE name_inverted_index.word='%s'" % search_word
+        Database.cursor.execute(sql)
+        # 获取所有记录列表
         data = Database.cursor.fetchall()
         return data
