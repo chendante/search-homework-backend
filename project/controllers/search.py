@@ -7,14 +7,14 @@ from bottle import template, request, response
 
 
 #获取两个倒排索引表
-@app.route('/search/lyric_index', method='GET')
+@app.route('/search/lyric-index', method='GET')
 @app.hook('after_request')
 def get_lyric_index():
     response.headers['Access-Control-Allow-Origin'] = '*'
     return json.dumps(InvertedIndex.lyric_inverted_index_list())
 
 
-@app.route('/search/name_index', method='GET')
+@app.route('/search/name-index', method='GET')
 @app.hook('after_request')
 def get_name_index():
     response.headers['Access-Control-Allow-Origin'] = '*'
