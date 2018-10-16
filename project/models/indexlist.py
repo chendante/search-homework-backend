@@ -1,6 +1,3 @@
-import json
-
-
 #每个词项的结构
 class Node:
     def __init__(self, word, id):
@@ -14,8 +11,8 @@ class Node:
 
     def getJson(self):
         return {
-            'word' : self.word,
-            'IDS' : self.id
+            'word': self.word,
+            'IDS': self.id
         }
 
 

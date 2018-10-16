@@ -12,8 +12,8 @@ def index():
 @app.route('/print', method=['GET', 'POST'])
 def printer():
     if request.method == 'POST':
-        message =request.forms.get('text')
-        message =message+'22'
+        message = request.forms.get('text')
+        message = message+'22'
         return json.dumps(message)
         # return template('printer/index', message=message)
     return template('printer/print', message='')

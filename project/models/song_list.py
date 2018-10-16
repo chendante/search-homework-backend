@@ -39,6 +39,8 @@ class song_list:
         file1.write(json.dumps(lyric_index.getJson()))
         file2 = open('song_name_index.json', 'w+')
         file2.write(json.dumps(name_index.getJson()))
+        file1.close()
+        file2.close()
 
     @staticmethod
     def song_number():
@@ -52,24 +54,10 @@ class song_list:
         data = Database.cursor.fetchall()
         return data
 
-    @staticmethod
-    def lyric_inverted_index_list():
-        Database.cursor.execute("SELECT * from lyric_inverted_index")
-        data = Database.cursor.fetchall()
-        return data
-
     #给一个词，返回对应的id列表
     @staticmethod
     def search_lyric(search_word):
         sql = "SELECT * FROM lyric_inverted_index WHERE lyric_inverted_index.word='%s'" % search_word
-        Database.cursor.execute(sql)
-        # 获取所有记录列表
-        data = Database.cursor.fetchall()
-        return data
-
-    @staticmethod
-    def search_name(search_word):
-        sql = "SELECT * FROM name_inverted_index WHERE name_inverted_index.word='%s'" % search_word
         Database.cursor.execute(sql)
         # 获取所有记录列表
         data = Database.cursor.fetchall()
