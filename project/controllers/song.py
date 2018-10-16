@@ -1,6 +1,6 @@
 import json
 import time
-from project.models.song_list import song_list
+from project.models.song_list import SongList
 from project import app
 from bottle import template, request, response
 
@@ -9,14 +9,22 @@ from bottle import template, request, response
 @app.hook('after_request')
 def get_song_number():
     response.headers['Access-Control-Allow-Origin'] = '*'
-    return json.dumps(song_list.song_number())
+    return json.dumps(SongList.song_number())
 
 
 @app.route('/song/list', method='GET')
 @app.hook('after_request')
 def get_song_list():
     response.headers['Access-Control-Allow-Origin'] = '*'
-    return json.dumps(song_list.song_name_list())
+    return json.dumps(SongList.song_name_list())
+
+
+@app.route('/song/one', method='GET')
+@app.hook('after_request')
+def get_one_song():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    id = request.query.id
+    return json.dumps(SongList.get_one_song(id))
 
 
 @app.route('/song/index', method='POST')
@@ -24,6 +32,6 @@ def get_song_list():
 def update_index():
     response.headers['Access-Control-Allow-Origin'] = '*'
     begin = time.time()
-    song_list.updateIndex()
+    SongList.updateIndex()
     end = time.time()
     return json.dumps(end-begin)

@@ -17,6 +17,13 @@ def deal_boolean_list(boolean_list):
         return single_word_list
 
 
+def deal_not_list(not_list):
+    t = []
+    for word in not_list:
+        t = list(set(t).union(set(InvertedIndex.search_lyric(word))))
+    return t
+
+
 class InvertedIndex:
     @staticmethod
     def lyric_inverted_index_list():
@@ -36,6 +43,8 @@ class InvertedIndex:
         Database.cursor.execute(sql)
         # 获取所有记录列表
         data = Database.cursor.fetchall()
+        if data == ():
+            return []
         return convert_list(data[0][2])
 
     @staticmethod
@@ -44,15 +53,16 @@ class InvertedIndex:
         Database.cursor.execute(sql)
         # 获取所有记录列表
         data = Database.cursor.fetchall()
-        print(data)
         # return data
         if data == ():
             return []
         return convert_list(data[0][2])
 
     @staticmethod
-    def search_boolean(boolean_str):
+    def search_boolean(boolean_str, not_str):
         boolean_list = convert_list(boolean_str)
-        print(boolean_list)
-        return deal_boolean_list(boolean_list)
-        # return boolean_list
+        if len(not_str) == 0:
+            not_list = []
+        else:
+            not_list = deal_not_list(convert_list(not_str))
+        return list(set(deal_boolean_list(boolean_list)).difference(set(not_list)))

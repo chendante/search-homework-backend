@@ -21,7 +21,7 @@ def getinfo(i):
     return data
 
 
-class song_list:
+class SongList:
 
     #更新歌曲名称和歌词的索引
     @staticmethod
@@ -60,5 +60,23 @@ class song_list:
         sql = "SELECT * FROM lyric_inverted_index WHERE lyric_inverted_index.word='%s'" % search_word
         Database.cursor.execute(sql)
         # 获取所有记录列表
+        data = Database.cursor.fetchall()
+        return data
+
+    @staticmethod
+    def get_one_song(id):
+        sql = "SELECT * from song_list WHERE id = '%s'" % id
+        Database.cursor.execute(sql)
+        data = Database.cursor.fetchall()
+        return data[0]
+
+    @staticmethod
+    def get_search_list(id_list):
+        id_str = str(id_list[0])
+        for val in id_list[1:]:
+            id_str += ',' + str(val)
+        sql = "SELECT * from song_list WHERE id in (%s)" % id_str
+        print(sql)
+        Database.cursor.execute(sql)
         data = Database.cursor.fetchall()
         return data
