@@ -38,7 +38,10 @@ def get_search_boolean():
         return json.dumps("请输入正确格式的布尔表达式")
     not_str = request.query.dont
     id_list = InvertedIndex.search_boolean(boolean_str, not_str)
-    search_list = SongList.get_search_list(id_list)
+    if id_list == []:
+        search_list = []
+    else:
+        search_list = SongList.get_search_list(id_list)
     return json.dumps({'id_list': id_list, 'song_list': search_list})
 
 
