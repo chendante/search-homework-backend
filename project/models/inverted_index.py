@@ -2,7 +2,7 @@ from project.models.base import Database
 
 #将字符串格式的id列表转换为列表
 def convert_list(num_str):
-    return num_str.lstrip().split(" ")
+    return num_str.lstrip().rstrip().split(" ")
 
 
 #把所有运算符都当成右运算符
