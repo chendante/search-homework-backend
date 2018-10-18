@@ -3,16 +3,19 @@ class Node:
     def __init__(self, word, id):
         self.word = word
         self.id = [id]
+        self.num = 1
 
     #在该词项中添加一个歌曲ID
     def addID(self, Sid):
         if self.id.count(Sid) == 0:
             self.id.append(Sid)
+            self.num += 1
 
     def getJson(self):
         return {
             'word': self.word,
-            'IDS': self.id
+            'IDS': self.id,
+            'num': self.num
         }
 
 
