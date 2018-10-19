@@ -8,21 +8,21 @@ from bottle import template, request, response
 
 #获取两个倒排索引表
 @app.route('/search/lyric-index', method='GET')
-@app.hook('after_request')
+# @app.hook('after_request')
 def get_lyric_index():
     response.headers['Access-Control-Allow-Origin'] = '*'
     return json.dumps(InvertedIndex.lyric_inverted_index_list())
 
 
 @app.route('/search/name-index', method='GET')
-@app.hook('after_request')
+# @app.hook('after_request')
 def get_name_index():
     response.headers['Access-Control-Allow-Origin'] = '*'
     return json.dumps(InvertedIndex.name_inverted_index_list())
 
 
 @app.route('/search/name', method='GET')
-@app.hook('after_request')
+# @app.hook('after_request')
 def get_song_list():
     response.headers['Access-Control-Allow-Origin'] = '*'
     word = request.query.word
@@ -30,7 +30,7 @@ def get_song_list():
 
 
 @app.route('/search/boolean', method='GET')
-@app.hook('after_request')
+# @app.hook('after_request')
 def get_search_boolean():
     response.headers['Access-Control-Allow-Origin'] = '*'
     boolean_str = request.query.boolean

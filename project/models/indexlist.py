@@ -13,9 +13,9 @@ class Node:
 
     def getJson(self):
         return {
-            'word': self.word,
+            'term': self.word,
             'IDS': self.id,
-            'num': self.num
+            'DF': self.num
         }
 
 
