@@ -70,6 +70,7 @@ class SongList:
         data = Database.cursor.fetchall()
         return data[0]
 
+    #获取id列表的所有歌曲
     @staticmethod
     def get_search_list(id_list):
         id_str = str(id_list[0])

@@ -34,10 +34,15 @@ def get_song_list():
 def get_search_boolean():
     response.headers['Access-Control-Allow-Origin'] = '*'
     boolean_str = request.query.boolean
+    kind = request.query.kind
     if len(boolean_str) == 0:
-        return json.dumps("请输入正确格式的布尔表达式")
+        return json.dumps({'id_list': [], 'song_list': []})
     not_str = request.query.dont
-    id_list = InvertedIndex.search_boolean(boolean_str, not_str)
+    if kind == 2:
+        id_list = list(set(InvertedIndex.search_boolean(boolean_str, not_str, 1)).
+                       union(InvertedIndex.search_boolean(boolean_str, not_str)))
+    else:
+        id_list = InvertedIndex.search_boolean(boolean_str, not_str, kind)
     if id_list == []:
         search_list = []
     else:

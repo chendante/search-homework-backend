@@ -17,10 +17,11 @@ class song:
         return self.id
 
     def getwordlist(self):
-        list = ()
+        w_list = ()
         words = self.getwords()
         for word in words:
-            if (word in stopwords) or (word in list):
+            if (word in stopwords) \
+                    or (word in w_list):
                 continue
-            list += (word,)
-        return list
+            w_list += (word,)
+        return w_list
