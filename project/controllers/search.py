@@ -34,7 +34,7 @@ def get_song_list():
 def get_search_boolean():
     response.headers['Access-Control-Allow-Origin'] = '*'
     boolean_str = request.query.boolean
-    kind = request.query.kind
+    kind = int(request.query.kind)
     if len(boolean_str) == 0:
         return json.dumps({'id_list': [], 'song_list': []})
     not_str = request.query.dont
