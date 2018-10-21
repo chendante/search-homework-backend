@@ -35,7 +35,7 @@ class InvertedIndex:
     def lyric_inverted_index_list():
         m_d = Database()
         m_d.cursor.execute("SELECT * from lyric_inverted_index limit 100")
-        data = Database.cursor.fetchall()
+        data = m_d.cursor.fetchall()
         return data
 
     @staticmethod
