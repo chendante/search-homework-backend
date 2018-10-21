@@ -6,18 +6,20 @@ import json
 
 # 获取最大ID
 def maxid():
+    m_d = Database()
     sql = "SELECT MAX(ID) from song_list"
-    Database.cursor.execute(sql)
-    data = Database.cursor.fetchall()
+    m_d.cursor.execute(sql)
+    data = m_d.cursor.fetchall()
     return data[0][0]
 
 
 # 获取某个ID的歌曲信息
 def getinfo(i):
+    m_d = Database()
     sql = "SELECT * from song_list " \
           "where song_list.ID = '%d'" % i
-    Database.cursor.execute(sql)
-    data = Database.cursor.fetchall()
+    m_d.cursor.execute(sql)
+    data = m_d.cursor.fetchall()
     return data
 
 
@@ -44,40 +46,46 @@ class SongList:
 
     @staticmethod
     def song_number():
-        Database.cursor.execute("SELECT COUNT(ID) from song_list")
-        data = Database.cursor.fetchall()
+        m_d = Database()
+        m_d.cursor.execute("SELECT COUNT(ID) from song_list")
+        data = m_d.cursor.fetchall()
+        m_d.db.close()
         return data[0][0]
 
     @staticmethod
     def song_name_list():
-        Database.cursor.execute("SELECT song_id,song_name,id from song_list")
-        data = Database.cursor.fetchall()
+        m_d = Database()
+        m_d.cursor.execute("SELECT song_id,song_name,id from song_list")
+        data = m_d.cursor.fetchall()
         return data
 
     #给一个词，返回对应的id列表
     @staticmethod
     def search_lyric(search_word):
+        m_d = Database()
         sql = "SELECT * FROM lyric_inverted_index WHERE lyric_inverted_index.word='%s'" % search_word
-        Database.cursor.execute(sql)
+        m_d.cursor.execute(sql)
         # 获取所有记录列表
-        data = Database.cursor.fetchall()
+        data = m_d.cursor.fetchall()
         return data
 
     @staticmethod
     def get_one_song(id):
+        m_d = Database()
         sql = "SELECT * from song_list WHERE id = '%s'" % id
-        Database.cursor.execute(sql)
-        data = Database.cursor.fetchall()
+        m_d.cursor.execute(sql)
+        data = m_d.cursor.fetchall()
         return data[0]
 
     #获取id列表的所有歌曲
     @staticmethod
     def get_search_list(id_list):
+        m_d = Database()
         id_str = str(id_list[0])
         for val in id_list[1:]:
             id_str += ',' + str(val)
         sql = "SELECT * from song_list WHERE id in (%s)" % id_str
         print(sql)
-        Database.cursor.execute(sql)
-        data = Database.cursor.fetchall()
+        m_d.cursor.execute(sql)
+        data = m_d.cursor.fetchall()
         return data

@@ -33,28 +33,32 @@ def deal_not_list(not_list, kind=0):
 class InvertedIndex:
     @staticmethod
     def lyric_inverted_index_list():
-        Database.cursor.execute("SELECT * from lyric_inverted_index limit 100")
+        m_d = Database()
+        m_d.cursor.execute("SELECT * from lyric_inverted_index limit 100")
         data = Database.cursor.fetchall()
         return data
 
     @staticmethod
     def name_inverted_index_list():
-        Database.cursor.execute("SELECT * from name_inverted_index limit 100")
-        data = Database.cursor.fetchall()
+        m_d = Database()
+        m_d.cursor.execute("SELECT * from name_inverted_index limit 100")
+        data = m_d.cursor.fetchall()
         return data
 
     @staticmethod
     def search_name(search_word):
+        m_d = Database()
         sql = "SELECT * FROM name_inverted_index WHERE name_inverted_index.word='%s'" % search_word
-        Database.cursor.execute(sql)
+        m_d.cursor.execute(sql)
         # 获取所有记录列表
-        data = Database.cursor.fetchall()
+        data = m_d.cursor.fetchall()
         if data == ():
             return []
         return convert_list(data[0][2])
 
     @staticmethod
     def search_lyric(search_word, kind=0):
+        m_d = Database()
         if kind == 0:
             sql = "SELECT * FROM lyric_inverted_index " \
                   "WHERE lyric_inverted_index.word='%s'" \
@@ -63,9 +67,9 @@ class InvertedIndex:
             sql = "SELECT * FROM name_inverted_index " \
                   "WHERE name_inverted_index.word='%s'" \
                   % search_word
-        Database.cursor.execute(sql)
+        m_d.cursor.execute(sql)
         # 获取所有记录列表
-        data = Database.cursor.fetchall()
+        data = m_d.cursor.fetchall()
 
         if data == ():
             return []
