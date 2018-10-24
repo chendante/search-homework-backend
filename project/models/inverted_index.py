@@ -12,14 +12,17 @@ def convert_list(num_str):
 
 #把所有运算符都当成右运算符
 def deal_boolean_list(boolean_list, kind=0):
-    single_word_list = InvertedIndex.search_lyric(boolean_list[0], kind)
-    if len(boolean_list) > 1:
-        if boolean_list[1] == 'AND':
-            return list(set(single_word_list).intersection(set(deal_boolean_list(boolean_list[2:], kind))))
-        elif boolean_list[1] == 'OR':
-            return list(set(single_word_list).union(set(deal_boolean_list(boolean_list[2:], kind))))
-    else:
-        return single_word_list
+    try:
+        single_word_list = InvertedIndex.search_lyric(boolean_list[0], kind)
+        if len(boolean_list) > 1:
+            if boolean_list[1] == 'AND':
+                return list(set(single_word_list).intersection(set(deal_boolean_list(boolean_list[2:], kind))))
+            elif boolean_list[1] == 'OR':
+                return list(set(single_word_list).union(set(deal_boolean_list(boolean_list[2:], kind))))
+        else:
+            return single_word_list
+    except IndexError:
+        return []
 
 
 #将所有词项的倒排记录表取并集
