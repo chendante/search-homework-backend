@@ -73,7 +73,6 @@ class InvertedIndex:
         m_d.cursor.execute(sql)
         # 获取所有记录列表
         data = m_d.cursor.fetchall()
-
         if data == ():
             return []
         return convert_list(data[0][2])
@@ -86,3 +85,22 @@ class InvertedIndex:
         else:
             not_list = deal_not_list(convert_list(not_str), kind)
         return list(set(deal_boolean_list(boolean_list, kind)).difference(set(not_list)))
+
+    #获取某个单词的被引用的数量
+    @staticmethod
+    def get_word_num(search_word, kind=0):
+        m_d = Database()
+        if kind == 0:
+            sql = "SELECT * FROM lyric_inverted_index " \
+                  "WHERE lyric_inverted_index.word='%s'" \
+                  % search_word
+        else:
+            sql = "SELECT * FROM name_inverted_index " \
+                  "WHERE name_inverted_index.word='%s'" \
+                  % search_word
+        m_d.cursor.execute(sql)
+        # 获取所有记录列表
+        data = m_d.cursor.fetchall()
+        if data == ():
+            return 0
+        return data[0][3]
