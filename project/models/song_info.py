@@ -1,4 +1,5 @@
 import jieba
+from collections import Counter
 
 
 stopwords = set(['\n', ' ', ':', '这', '作曲', '作词', '我', '你'])
@@ -25,3 +26,15 @@ class song:
                 continue
             w_list += (word,)
         return w_list
+
+    #获取歌词tf
+    def get_tf(self):
+        tf = Counter()
+        words = self.getwords()
+        for word in words:
+            if word in stopwords:
+                continue
+            tf[word] += 1
+        return tf
+
+
