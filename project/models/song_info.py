@@ -1,9 +1,11 @@
 import jieba
+from project.models.inverted_index import InvertedIndex
 from collections import Counter
 
 
 stopwords = set(['\n', ' ', ':', '这', '作曲', '作词', '我', '你'])
 
+num_song = 99
 
 class song:
     def __init__(self, id, text):
@@ -36,5 +38,16 @@ class song:
                 continue
             tf[word] += 1
         return tf
+
+    def get_df(self, kind=0):
+        words = list(self.get_tf())
+        df = Counter()
+        for word in words:
+            num = InvertedIndex.search_lyric(word, kind)
+            if num == 0:
+                df[word] = 0
+            else:
+                df[word] = num_song/num
+        return df
 
 
