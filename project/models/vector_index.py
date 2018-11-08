@@ -1,9 +1,17 @@
 from collections import Counter
 from project.models.song_info import song
-from project.models.inverted_index import InvertedIndex
+from project.models.inverted_index import InvertedIndex, convert_list
 import math
 
 num_of_song = 99
+
+def get_weight_list(text):
+    str_list = convert_list(text)
+    res = Counter()
+    for value in str_list:
+        id_w = value.lstrip().rstrip().split(":")
+        res[id_w[0]] = id_w[1]
+    return res
 
 
 # 该类用于处理向量空间模型搜索内容的处理
@@ -38,6 +46,10 @@ class VectorSearch:
         self.get_tf()
         self.get_tf_idf(0)
         self.get_tf_idf(1)
+
+    def get_cos_list(self):
+        for sid in self.lyric_list:
+
 
 
 # 该类用于将一个歌曲的内容处理为数据库所需要的形式

@@ -5,7 +5,6 @@ from collections import Counter
 
 stopwords = set(['\n', ' ', ':', '这', '作曲', '作词', '我', '你'])
 
-num_song = 99
 
 class song:
     def __init__(self, id, text):
