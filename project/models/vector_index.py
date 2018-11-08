@@ -1,16 +1,28 @@
 from collections import Counter
 from project.models.song_info import song
 from project.models.inverted_index import InvertedIndex, convert_list
+from project.models.base import Database
 import math
 
 num_of_song = 99
+name_weight = 2
+
 
 def get_weight_list(text):
     str_list = convert_list(text)
     res = Counter()
     for value in str_list:
         id_w = value.lstrip().rstrip().split(":")
-        res[id_w[0]] = id_w[1]
+        res[int(id_w[0])] = float(id_w[1])
+    return res
+
+
+# 将counter类数据排序并返回list格式
+def counter_to_list(co):
+    res = []
+    for sid in list(co.most_common()):
+        print(sid[0])
+        res.append(sid[0])
     return res
 
 
@@ -20,10 +32,13 @@ class VectorSearch:
         self.text = text
         self.song = song(-1, text)
         self.tf = Counter()
+        # 格式：{ sid: tf-idf, sid: tf-idf}
         self.lyric_tf_idf = Counter()
         self.name_tf_idf = Counter()
         self.lyric_list = []
         self.name_list = []
+        self.lyric_cos = Counter()
+        self.name_cos = Counter()
 
     def get_tf(self):
         self.tf = self.song.get_tf()
@@ -47,9 +62,40 @@ class VectorSearch:
         self.get_tf_idf(0)
         self.get_tf_idf(1)
 
-    def get_cos_list(self):
-        for sid in self.lyric_list:
+    def get_one_cos(self, sid, kind=0):
+        vector_space = VectorSpace(sid, kind)
+        res = 0
+        for tf_idf_value in vector_space.w_list.items():
+            if kind == 0:
+                res += self.lyric_tf_idf[tf_idf_value[0]]*tf_idf_value[1]
+            else:
+                res += self.name_tf_idf[tf_idf_value[0]]*tf_idf_value[1]
+        return res/vector_space.length
 
+    def get_cos_list(self, kind=0):
+        if kind == 0:
+            the_list = self.lyric_list
+        else:
+            the_list = self.name_list
+        for sid in the_list:
+            if kind == 0:
+                self.lyric_cos[sid] = self.get_one_cos(sid, kind)
+            else:
+                self.name_cos[sid] = self.get_one_cos(sid, kind)
+
+    def get_sort(self, kind=0):
+        self.deal()
+        self.get_cos_list(0)
+        self.get_cos_list(1)
+        if kind == 0:
+            return counter_to_list(self.lyric_cos)
+        elif kind == 1:
+            return counter_to_list(self.name_cos)
+        w_list = Counter()
+        keys = set(self.lyric_cos).union(self.name_cos)
+        for key in keys:
+            w_list[key] = self.name_cos[key]*name_weight + self.lyric_cos[key]
+        return counter_to_list(w_list)
 
 
 # 该类用于将一个歌曲的内容处理为数据库所需要的形式
@@ -84,3 +130,23 @@ class VectorIndex:
             'tf-idf-matrix': list(self.get_index()),
             'length': self.get_length()
         }
+
+
+# 该类用于将数据库中的vector_index处理成为需要的格式
+class VectorSpace:
+    def __init__(self, sid, kind=0):
+        self.id = sid
+        self.kind = kind
+        m_d = Database()
+        if kind == 0:
+            sql = "SELECT * from lyric_vector_index where sid = %d" % int(sid)
+        else:
+            sql = "SELECT * from name_vector_index where sid = %d" % int(sid)
+        m_d.cursor.execute(sql)
+        data = m_d.cursor.fetchall()
+        if not data == ():
+            self.w_list = get_weight_list(data[0][1])
+            self.length = data[0][2]
+        else:
+            self.w_list = Counter()
+            self.length = 0

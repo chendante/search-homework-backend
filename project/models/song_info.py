@@ -6,6 +6,7 @@ from collections import Counter
 stopwords = set(['\n', ' ', ':', '这', '作曲', '作词', '我', '你'])
 
 
+# 这只是一个处理文本信息的类，不会进行任何数据库操作
 class song:
     def __init__(self, id, text):
         self.id = id

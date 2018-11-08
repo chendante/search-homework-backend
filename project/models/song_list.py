@@ -100,12 +100,12 @@ class SongList:
     #获取id列表的所有歌曲
     @staticmethod
     def get_search_list(id_list):
+        print(id_list[0])
         m_d = Database()
         id_str = str(id_list[0])
         for val in id_list[1:]:
             id_str += ',' + str(val)
         sql = "SELECT * from song_list WHERE id in (%s)" % id_str
-        print(sql)
         m_d.cursor.execute(sql)
         data = m_d.cursor.fetchall()
         return data
