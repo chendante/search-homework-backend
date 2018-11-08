@@ -1,6 +1,7 @@
 from project.models.base import Database
 import project.models.indexlist as indexlist
 import project.models.song_info as songInfo
+from project.models.vector_index import VectorIndex
 import json
 
 
@@ -24,8 +25,7 @@ def getinfo(i):
 
 
 class SongList:
-
-    #更新歌曲名称和歌词的索引
+    # 更新歌曲名称和歌词的索引
     @staticmethod
     def updateIndex():
         lyric_index = indexlist.IndexList()
@@ -41,6 +41,26 @@ class SongList:
         file1.write(json.dumps(lyric_index.getJson()))
         file2 = open('song_name_index.json', 'w+')
         file2.write(json.dumps(name_index.getJson()))
+        file1.close()
+        file2.close()
+
+    # 更新向量空间索引
+    @staticmethod
+    def update_vector_index():
+        name_json_list = []
+        lyric_json_list = []
+        for i in range(maxid()):
+            print(i)
+            str = getinfo(i)
+            if not str == ():
+                name_vector_index = VectorIndex(str[0][1], str[0][2], 1)
+                lyric_vector_index = VectorIndex(str[0][3], str[0][2], 0)
+                name_json_list.append(name_vector_index.get_json())
+                lyric_json_list.append(lyric_vector_index.get_json())
+        file1 = open('lyric_vector_index.json', 'w+')
+        file1.write(json.dumps(lyric_json_list))
+        file2 = open('name_vector_index.json', 'w+')
+        file2.write(json.dumps(name_json_list))
         file1.close()
         file2.close()
 

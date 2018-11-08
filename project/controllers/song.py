@@ -35,3 +35,12 @@ def update_index():
     SongList.updateIndex()
     end = time.time()
     return json.dumps(end-begin)
+
+
+@app.route('/song/vector-index', method='POST')
+def update_vector_index():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    begin = time.time()
+    SongList.update_vector_index()
+    end = time.time()
+    return json.dumps(end - begin)

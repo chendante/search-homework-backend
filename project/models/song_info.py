@@ -39,15 +39,15 @@ class song:
             tf[word] += 1
         return tf
 
-    def get_df(self, kind=0):
-        words = list(self.get_tf())
-        df = Counter()
-        for word in words:
-            num = InvertedIndex.search_lyric(word, kind)
-            if num == 0:
-                df[word] = 0
-            else:
-                df[word] = num_song/num
-        return df
+    # def get_df(self, kind=0):
+    #     words = list(self.get_tf())
+    #     df = Counter()
+    #     for word in words:
+    #         num = InvertedIndex.search_lyric(word, kind)
+    #         if num == 0:
+    #             df[word] = 0
+    #         else:
+    #             df[word] = num_song/num
+    #     return df
 
 
