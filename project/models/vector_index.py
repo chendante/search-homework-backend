@@ -154,9 +154,14 @@ class VectorSpace:
     @staticmethod
     def get_vector_list(kind=0):
         m_d = Database()
-        sql = "SELECT * from lyric_vector_index " \
-              "INNER JOIN song_list " \
-              "on song_list.ID = lyric_vector_index.Sid"
+        if kind == 0:
+            sql = "SELECT * from lyric_vector_index " \
+                  "INNER JOIN song_list " \
+                  "on song_list.ID = lyric_vector_index.Sid"
+        else:
+            sql = "SELECT * from name_vector_index " \
+                  "INNER JOIN song_list " \
+                  "on song_list.ID = name_vector_index.Sid"
         print(sql)
         m_d.cursor.execute(sql)
         data = m_d.cursor.fetchall()

@@ -70,4 +70,5 @@ def get_search_vector():
 @app.route('/search/vector-list', method='GET')
 def get_search_vector():
     response.headers['Access-Control-Allow-Origin'] = '*'
-    return json.dumps(Vector.VectorSpace.get_vector_list())
+    kind = request.query.kind
+    return json.dumps(Vector.VectorSpace.get_vector_list(kind))
