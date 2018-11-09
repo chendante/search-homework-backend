@@ -59,16 +59,21 @@ def get_search_vector():
     if len(search_str) == 0:
         return json.dumps({'id_list': [], 'song_list': []})
     vector_search = Vector.VectorSearch(search_str)
-    id_list = vector_search.get_sort(kind)
+    sort_list = vector_search.get_sort(kind)
+    id_list = sort_list["id_list"]
     if id_list == []:
         search_list = []
     else:
-        search_list = SongList.get_search_list(id_list)
+        # search_list = SongList.get_search_list(id_list)
+        search_list = []
+        for i in range(len(id_list)):
+            search_list.append(SongList.get_one_song(int(id_list[i])))
+            search_list[i] += (sort_list["w_list"][i],)
     return json.dumps({'id_list': id_list, 'song_list': search_list})
 
 
 @app.route('/search/vector-list', method='GET')
 def get_search_vector():
     response.headers['Access-Control-Allow-Origin'] = '*'
-    kind = request.query.kind
+    kind = int(request.query.kind)
     return json.dumps(Vector.VectorSpace.get_vector_list(kind))

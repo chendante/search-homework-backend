@@ -19,10 +19,10 @@ def get_weight_list(text):
 
 # 将counter类数据排序并返回list格式
 def counter_to_list(co):
-    res = []
+    res = {"id_list": [], "w_list": []}
     for sid in list(co.most_common()):
-        print(sid[0])
-        res.append(sid[0])
+        res["id_list"].append(sid[0])
+        res["w_list"].append(sid[1])
     return res
 
 
@@ -157,11 +157,11 @@ class VectorSpace:
         if kind == 0:
             sql = "SELECT * from lyric_vector_index " \
                   "INNER JOIN song_list " \
-                  "on song_list.ID = lyric_vector_index.Sid"
+                  "on song_list.ID = lyric_vector_index.Sid limit 10"
         else:
             sql = "SELECT * from name_vector_index " \
                   "INNER JOIN song_list " \
-                  "on song_list.ID = name_vector_index.Sid"
+                  "on song_list.ID = name_vector_index.Sid limit 10"
         print(sql)
         m_d.cursor.execute(sql)
         data = m_d.cursor.fetchall()
