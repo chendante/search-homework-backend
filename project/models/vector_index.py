@@ -48,7 +48,6 @@ class VectorSearch:
         words = self.song.getwords()
         for word in words:
             data = InvertedIndex.get_word_info(word, kind)
-            print(word)
             if data['num'] != 0:
                 if kind == 0:
                     self.lyric_tf_idf[data['id']] = (1+math.log10(self.tf[word]))*math.log10(num_of_song/data['num'])
@@ -116,10 +115,8 @@ class VectorIndex:
 
     def get_length(self):
         tf_idf_list = self.get_index()
-        print(tf_idf_list)
         res = 0
         for value in tf_idf_list:
-            print(value)
             res += value[1]*value[1]
         res = math.sqrt(res/len(tf_idf_list))
         return res
@@ -162,7 +159,6 @@ class VectorSpace:
             sql = "SELECT * from name_vector_index " \
                   "INNER JOIN song_list " \
                   "on song_list.ID = name_vector_index.Sid limit 10"
-        print(sql)
         m_d.cursor.execute(sql)
         data = m_d.cursor.fetchall()
         return data

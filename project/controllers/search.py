@@ -64,7 +64,6 @@ def get_search_vector():
     if id_list == []:
         search_list = []
     else:
-        # search_list = SongList.get_search_list(id_list)
         search_list = []
         for i in range(len(id_list)):
             search_list.append(SongList.get_one_song(int(id_list[i])))
