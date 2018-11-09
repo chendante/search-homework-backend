@@ -150,3 +150,14 @@ class VectorSpace:
         else:
             self.w_list = Counter()
             self.length = 0
+
+    @staticmethod
+    def get_vector_list(kind=0):
+        m_d = Database()
+        sql = "SELECT * from lyric_vector_index " \
+              "INNER JOIN song_list " \
+              "on song_list.ID = lyric_vector_index.Sid"
+        print(sql)
+        m_d.cursor.execute(sql)
+        data = m_d.cursor.fetchall()
+        return data

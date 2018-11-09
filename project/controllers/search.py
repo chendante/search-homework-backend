@@ -52,7 +52,7 @@ def get_search_boolean():
 
 
 @app.route('/search/vector', method='GET')
-def get_search_boolean():
+def get_search_vector():
     response.headers['Access-Control-Allow-Origin'] = '*'
     search_str = request.query.text
     kind = int(request.query.kind)
@@ -67,4 +67,7 @@ def get_search_boolean():
     return json.dumps({'id_list': id_list, 'song_list': search_list})
 
 
-
+@app.route('/search/vector-list', method='GET')
+def get_search_vector():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return json.dumps(Vector.VectorSpace.get_vector_list())
