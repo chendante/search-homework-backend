@@ -25,7 +25,7 @@ class IndexBuilder:
 
     @staticmethod
     def insert_index(title, url, content, m_type, wid, the_time, page_rank):
-        # IndexBuilder.writer.delete_by_term('url', url)
+        # 写索引
         writer = IndexBuilder.ix.writer()
         writer.add_document(title=str(title)
                             , url=str(url)

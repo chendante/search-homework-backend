@@ -18,14 +18,13 @@ class DingSearch:
         searcher = DingSearch.ix.searcher(weighting=scoring.BM25F)
         m_parser = MultifieldParser(["content", "title"], IndexBuilder.schema, group=OrGroup)
         m_query = m_parser.parse(keyword)
-        # m_query = And(Term("wid", 11))
         if type_id in [1, 2, 3, 4, 5]:
             m_query = m_query.__and__(Term("site", str(type_id)))
         res = searcher.search(m_query)
         # 得到查询总条数
         res_total = len(res)
         # 分页查询
-        res = searcher.search_page(m_query, page, 15)
+        res = searcher.search_page(m_query, page, 10)
         try:
             rr = []
             for hit in res:
@@ -49,7 +48,7 @@ class DingSearch:
     def re_sort(rr):
         sort_list = []
         for v in rr:
-            score = math.log10(v["pagerank"]) + v["score"]
+            score = math.log10(v["pagerank"]+1) + v["score"]
             sort_list.append(SortElement(score=score, info=v))
         sort_list.sort()
         res = []
