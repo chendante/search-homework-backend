@@ -19,6 +19,7 @@ class song:
     def getid(self):
         return self.id
 
+    # 获取无重复无停用词列表
     def getwordlist(self):
         w_list = ()
         words = self.getwords()
