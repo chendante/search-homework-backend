@@ -12,6 +12,7 @@ class BlockedSort:
     # 倒排记录（不允许超过100条）
     # 每条记录的格式：(termId,docId)
     index_list = []
+    save_time = 89
     max_index_num = 100
     file_base_name = "./BlockedSort/index_list"
     level = 0
@@ -45,18 +46,10 @@ class BlockedSort:
             return False
         f = open(file_name, 'r')
         data = []
-        start = 50 * start
-        end = start + 50
-        i = start
         for line in f:
-            # 最多加载50条
-            i += 1
-            if i <= start:
-                continue
-            if i > end:
-                break
-            x, y = line.split()
-            data.append([int(x), int(y)])
+            if line != "":
+                x, y = line.split()
+                data.append([int(x), int(y)])
         if no == 1:
             self.merge_index1 = data
         else:
@@ -65,6 +58,33 @@ class BlockedSort:
             return False
         f.close()
         return True
+        # level = str(self.level)
+        # num = str(self.num)
+        # file_name = self.file_base_name + "_" + level + "_" + num + ".txt"
+        # if not os.path.exists(file_name):
+        #     return False
+        # f = open(file_name, 'r')
+        # data = []
+        # start = 50 * start
+        # end = start + 50
+        # i = start
+        # for line in f:
+        #     # 最多加载50条
+        #     i += 1
+        #     if i <= start:
+        #         continue
+        #     if i > end:
+        #         break
+        #     x, y = line.split()
+        #     data.append([int(x), int(y)])
+        # if no == 1:
+        #     self.merge_index1 = data
+        # else:
+        #     self.merge_index2 = data
+        # if not data:
+        #     return False
+        # f.close()
+        # return True
 
     # 构建倒排索引
     def pre_process(self):
@@ -100,43 +120,52 @@ class BlockedSort:
 
     # 将两个Block合并，并写入文件
     def block_merge(self, num1, num2, num_next):
-        load1 = 0
-        load2 = 0
-        start = 0
         self.num = num1
-        flag1 = self.load_index_list(1, load1)
+        self.load_index_list(1, num1)
         self.num = num2
-        flag2 = self.load_index_list(2, load2)
-        while True:
-            self.base_merge()
-            self.index_list = BlockedSort.remove_unload_term(self.index_list, start)
-            self.level += 1
-            self.num = num_next
-            self.save_index_list()
-            self.level -= 1
-            if flag1 and flag2:
-                if self.merge_index1[-1][0] > self.merge_index2[-1][0]:
-                    start = self.merge_index2[-1][0]
-                    load2 += 1
-                    self.merge_index1 = BlockedSort.remove_load_term(self.merge_index1, start)
-                    self.num = num2
-                    flag2 = self.load_index_list(2, load2)
-                else:
-                    start = self.merge_index1[-1][0]
-                    load1 += 1
-                    self.merge_index2 = BlockedSort.remove_load_term(self.merge_index2, start)
-                    self.num = num1
-                    flag1 = self.load_index_list(1, load1)
-            elif flag1:
-                load1 += 1
-                self.num = num1
-                flag1 = self.load_index_list(1, load1)
-            elif flag2:
-                load2 += 1
-                self.num = num2
-                flag2 = self.load_index_list(2, load2)
-            else:
-                break
+        self.load_index_list(2, num2)
+        self.base_merge()
+        self.level += 1
+        self.num = num_next
+        self.save_index_list()
+        self.level -= 1
+        # load1 = 0
+        # load2 = 0
+        # start = 0
+        # self.num = num1
+        # flag1 = self.load_index_list(1, load1)
+        # self.num = num2
+        # flag2 = self.load_index_list(2, load2)
+        # while True:
+        #     self.base_merge()
+        #     self.index_list = BlockedSort.remove_unload_term(self.index_list, start)
+        #     self.level += 1
+        #     self.num = num_next
+        #     self.save_index_list()
+        #     self.level -= 1
+        #     if flag1 and flag2:
+        #         if self.merge_index1[-1][0] > self.merge_index2[-1][0]:
+        #             start = self.merge_index2[-1][0]
+        #             load2 += 1
+        #             self.merge_index1 = BlockedSort.remove_load_term(self.merge_index1, start)
+        #             self.num = num2
+        #             flag2 = self.load_index_list(2, load2)
+        #         else:
+        #             start = self.merge_index1[-1][0]
+        #             load1 += 1
+        #             self.merge_index2 = BlockedSort.remove_load_term(self.merge_index2, start)
+        #             self.num = num1
+        #             flag1 = self.load_index_list(1, load1)
+        #     elif flag1:
+        #         load1 += 1
+        #         self.num = num1
+        #         flag1 = self.load_index_list(1, load1)
+        #     elif flag2:
+        #         load2 += 1
+        #         self.num = num2
+        #         flag2 = self.load_index_list(2, load2)
+        #     else:
+        #         break
 
     @staticmethod
     def remove_load_term(m_list, start):
@@ -159,21 +188,15 @@ class BlockedSort:
     def block_sort(self):
         self.level = 1
         self.num = 0
-        for i in range(89):
-            print(i)
+        for i in range(self.save_time):
             file_name = self.file_base_name + "_0_" + str(i) + ".txt"
             f = open(file_name, 'r')
             data = []
-            j = 0
             for line in f:
-                # 最多加载50条
-                j += 1
-                if j > 100:
-                    break
-                x, y = line.split()
-                data.append([int(x), int(y)])
-            self.index_list = data
-            sort_list = np.array(self.index_list)
+                if line != "":
+                    x, y = line.split()
+                    data.append([int(x), int(y)])
+            sort_list = np.array(data)
             sort_list1 = sort_list[:, ::-1].T
             sort_list2 = np.lexsort(sort_list1)
             sort_list3 = sort_list[sort_list2]
@@ -183,11 +206,15 @@ class BlockedSort:
     def merge_start(self):
         self.level = 1
         while True:
+            print(self.level)
             num_max = 0
             while True:
                 self.num = num_max
                 if self.load_index_list(1, 0):
-                    self.block_merge(num_max, num_max + 1, num_max/2)
+                    self.merge_index1 = []
+                    self.merge_index2 = []
+                    self.block_merge(num_max, num_max + 1, int(num_max/2))
+                    print(self.level, "  ", self.num)
                 else:
                     break
                 num_max += 2
@@ -199,14 +226,23 @@ class BlockedSort:
 if __name__ == '__main__':
     test = BlockedSort()
     # test.pre_process()
-    test.block_sort()
-    a = np.array(
-        [[2, 14],
-         [35, 9],
-         [22, 12]]
-    )
+    # test.block_sort()
+    test.merge_start()
+    data = []
+    data.append([2, 14])
+    data.append([35, 12])
+    data.append([22, 12])
+    a = np.array(data)
+    # a = np.array(
+    #     [[2, 14],
+    #      [35, 9],
+    #      [22, 12],
+    #      [4, 8]]
+    # )
     a1 = a[:, ::-1].T
     a2 = np.lexsort(a1)
     a3 = a[a2]
     k = list(a3)
+    for v in k:
+        print(v)
     print(k)
